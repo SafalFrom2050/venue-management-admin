@@ -1,4 +1,3 @@
-import 'package:admin/responsive.dart';
 import 'package:admin/screens/events/components/recent_events.dart';
 import 'package:flutter/material.dart';
 

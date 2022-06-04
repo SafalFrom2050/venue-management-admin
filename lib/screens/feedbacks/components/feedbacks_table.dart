@@ -1,7 +1,10 @@
 import 'dart:html';
 
-import 'package:admin/models/FeedbackInfo.dart';
+import 'package:admin/models/Feedback.dart';
 import 'package:admin/models/RecentFile.dart';
+import 'package:admin/services/feedback_service.dart';
+import 'package:admin/services/feedback_service.dart';
+import 'package:admin/services/feedback_service.dart';
 import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -9,10 +12,40 @@ import 'package:flutter/material.dart';
 import '../../../constants.dart';
 import '../../../models/User.dart';
 
-class FeedbacksTable extends StatelessWidget {
-  const FeedbacksTable({
-    Key? key,
-  }) : super(key: key);
+class FeedbacksTable extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() => _FeedbacksTableState();
+}
+
+class _FeedbacksTableState extends State<FeedbacksTable> {
+  List<FeedbackInfo> feedbackList = [];
+
+  setFeedbackListState(feedbacks) {
+    print(feedbacks);
+    setState(() {
+      feedbackList = feedbacks;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    FeedbackService()
+        .getFeedbacks()
+        .then((value) => setFeedbackListState(value));
+  }
+
+  onDeleted() {
+    final snackBar = SnackBar(
+      content: Text('Feedback Marked as Read!'),
+    );
+
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+
+    FeedbackService()
+        .getFeedbacks()
+        .then((value) => setFeedbackListState(value));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -50,8 +83,8 @@ class FeedbacksTable extends StatelessWidget {
                 ),
               ],
               rows: List.generate(
-                demoRecentFiles.length,
-                (index) => recentFileDataRow(demoFeedbacks[index]),
+                feedbackList.length,
+                (index) => recentFileDataRow(feedbackList[index], onDeleted),
               ),
             ),
           ),
@@ -61,7 +94,7 @@ class FeedbacksTable extends StatelessWidget {
   }
 }
 
-DataRow recentFileDataRow(FeedbackInfo feedbackInfo) {
+DataRow recentFileDataRow(FeedbackInfo feedbackInfo, onDeleted) {
   return DataRow(
     cells: [
       DataCell(
@@ -69,21 +102,23 @@ DataRow recentFileDataRow(FeedbackInfo feedbackInfo) {
           children: [
             Padding(
               padding: EdgeInsets.only(right: 8.0),
-              child: Text(feedbackInfo.userName),
+              child: Text(feedbackInfo.username ?? "subina1"),
             ),
           ],
         ),
       ),
-      DataCell(Text(feedbackInfo.email)),
-      DataCell(Text(feedbackInfo.phone)),
-      DataCell(Text(feedbackInfo.feedback)),
+      DataCell(Text(feedbackInfo.email ?? "subina1@gmail.com")),
+      DataCell(Text(feedbackInfo.phone ?? "--")),
+      DataCell(Text(feedbackInfo.feedback ?? "Good app!")),
       DataCell(Row(
         children: [
           Padding(
             padding: EdgeInsets.only(right: 8.0),
             child: OutlinedButton(
               onPressed: () {
-                // TODO
+                FeedbackService()
+                    .deleteFeedback(feedbackInfo.id ?? 0)
+                    .then((value) => onDeleted());
               },
               child: Text('Mark as Read'),
             ),

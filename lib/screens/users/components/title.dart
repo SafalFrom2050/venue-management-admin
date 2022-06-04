@@ -1,4 +1,5 @@
 import 'package:admin/responsive.dart';
+import 'package:admin/screens/users/add_users_screen.dart';
 import 'package:flutter/material.dart';
 
 import '../../../constants.dart';
@@ -28,7 +29,12 @@ class TitleWithButton extends StatelessWidget {
                       defaultPadding / (Responsive.isMobile(context) ? 2 : 1),
                 ),
               ),
-              onPressed: () {},
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => AddUsersScreen()),
+                );
+              },
               icon: Icon(Icons.add),
               label: Text("Add New User"),
             ),

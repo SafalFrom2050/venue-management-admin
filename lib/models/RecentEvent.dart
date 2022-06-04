@@ -1,5 +1,6 @@
 import 'package:admin/constants.dart';
 import 'package:flutter/material.dart';
+import 'package:json_annotation/json_annotation.dart';
 
 class RecentEventInfo {
   final String? title, date;

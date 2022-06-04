@@ -1,4 +1,5 @@
 import 'package:admin/responsive.dart';
+import 'package:admin/screens/bookings/components/recent_events.dart';
 import 'package:admin/screens/dashboard/components/my_fields.dart';
 import 'package:flutter/material.dart';
 
@@ -26,7 +27,7 @@ class DashboardScreen extends StatelessWidget {
                     children: [
                       ActiveEvents(),
                       SizedBox(height: defaultPadding),
-                      RecentBookings()
+                      BookingsTable()
                     ],
                   ),
                 ),

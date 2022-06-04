@@ -3,6 +3,7 @@ import 'package:admin/responsive.dart';
 import 'package:flutter/material.dart';
 
 import '../../../constants.dart';
+import '../../events/add_events_screen.dart';
 import 'event_info_card.dart';
 
 class ActiveEvents extends StatelessWidget {
@@ -30,7 +31,12 @@ class ActiveEvents extends StatelessWidget {
                       defaultPadding / (Responsive.isMobile(context) ? 2 : 1),
                 ),
               ),
-              onPressed: () {},
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => AddEventsScreen()),
+                );
+              },
               icon: Icon(Icons.add),
               label: Text("Add New Events"),
             ),

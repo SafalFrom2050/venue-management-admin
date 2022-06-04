@@ -1,16 +1,41 @@
-import 'dart:html';
-
-import 'package:admin/models/RecentFile.dart';
+import 'package:admin/models/event.dart';
+import 'package:admin/services/events_service.dart';
 import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../../../constants.dart';
 
-class EventsTable extends StatelessWidget {
-  const EventsTable({
-    Key? key,
-  }) : super(key: key);
+class EventsTable extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() => _EventsTableState();
+}
+
+class _EventsTableState extends State<EventsTable> {
+  List<Event> eventList = [];
+
+  setEventListState(events) {
+    print(events);
+    setState(() {
+      eventList = events;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    EventService().getEvents().then((value) => setEventListState(value));
+  }
+
+  onDeleted() {
+    final snackBar = SnackBar(
+      content: Text('Event Deleted!'),
+    );
+
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+
+    EventService().getEvents().then((value) => setEventListState(value));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -44,8 +69,8 @@ class EventsTable extends StatelessWidget {
                 ),
               ],
               rows: List.generate(
-                demoRecentFiles.length,
-                (index) => recentFileDataRow(demoRecentFiles[index]),
+                eventList.length,
+                (index) => recentFileDataRow(eventList[index], onDeleted),
               ),
             ),
           ),
@@ -55,7 +80,7 @@ class EventsTable extends StatelessWidget {
   }
 }
 
-DataRow recentFileDataRow(RecentBooking fileInfo) {
+DataRow recentFileDataRow(Event event, onDeleted) {
   return DataRow(
     cells: [
       DataCell(
@@ -63,13 +88,13 @@ DataRow recentFileDataRow(RecentBooking fileInfo) {
           children: [
             Padding(
               padding: EdgeInsets.only(right: 8.0),
-              child: Text(fileInfo.eventName!),
+              child: Text(event.title),
             ),
           ],
         ),
       ),
-      DataCell(Text(fileInfo.date!)),
-      DataCell(Text(fileInfo.userName!)),
+      DataCell(Text(event.createdAt.split("T")[0])),
+      DataCell(Text(event.photographer)),
       DataCell(Row(
         children: [
           Padding(
@@ -85,7 +110,9 @@ DataRow recentFileDataRow(RecentBooking fileInfo) {
             padding: EdgeInsets.only(right: 8.0),
             child: OutlinedButton(
                 onPressed: () {
-                  // TODO
+                  EventService()
+                      .deleteEvent(event.id)
+                      .then((value) => onDeleted());
                 },
                 child: Text('Delete'),
                 style: OutlinedButton.styleFrom(primary: dangerColor)),
