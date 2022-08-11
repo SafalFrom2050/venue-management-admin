@@ -6,6 +6,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../dashboard/dashboard_screen.dart';
 import '../../events/events_screen.dart';
+import '../../participations/participations_screen.dart';
 import '../../users/users_screen.dart';
 
 class SideMenu extends StatelessWidget {
@@ -45,6 +46,14 @@ class SideMenu extends StatelessWidget {
             svgSrc: "assets/icons/menu_tran.svg",
             press: () {
               onChangeScreen!(BookingsScreen());
+              Navigator.pop(context);
+            },
+          ),
+          DrawerListTile(
+            title: "Participation",
+            svgSrc: "assets/icons/menu_tran.svg",
+            press: () {
+              onChangeScreen!(ParticipationScreen());
               Navigator.pop(context);
             },
           ),

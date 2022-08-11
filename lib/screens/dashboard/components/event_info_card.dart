@@ -75,7 +75,7 @@ class ProgressLine extends StatelessWidget {
             child: Tooltip(
               message: "Maximum $capacity",
               child: Text(
-                "$attendees Attendees",
+                "$attendees Participants",
                 style: Theme.of(context)
                     .textTheme
                     .caption!
